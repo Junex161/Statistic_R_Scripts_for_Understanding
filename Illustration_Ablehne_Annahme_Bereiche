@@ -1,0 +1,47 @@
+# Parameter der Normalverteilung
+mean <- 100
+p25 <- 97
+p975 <- 103
+
+# Calculate standard deviation
+z25 <- qnorm(0.025)  # Z-score for the 2.5th percentile
+z975 <- qnorm(0.975) # Z-score for the 97.5th percentile
+
+# Using the relationship between X, mean, and Z
+sd <- (p975 - mean) / z975
+
+# Define the x range for the plot
+x <- seq(mean - 4 * sd, mean + 4 * sd, length.out = 1000)
+
+# Calculate the normal density
+y <- dnorm(x, mean = mean, sd = sd)
+
+# Plot the normal distribution without the default x-axis
+plot(x, y, type = "l", col = "blue", lwd = 2, 
+     main = "Normal Distribution", 
+     xlab = "Value", ylab = "Density", xaxt = "n")
+
+# Add customized x-axis with 1-step increments
+axis(1, at = seq(floor(mean - 4 * sd), ceiling(mean + 4 * sd), by = 1))
+
+# Add vertical lines for the kritische Werte, mean, and 97.5th percentile
+abline(v = c(p25, mean, p975), col = c("red", "black", "red"), lwd = 2, lty = 2)
+
+# Add horizontal lines for the "ablehnbereich"
+segments(x0 = min(x), y0 = 0, x1 = p25, y1 = 0, col = "red", lwd = 2)  # Left "ablehnbereich"
+segments(x0 = p975, y0 = 0, x1 = max(x), y1 = 0, col = "red", lwd = 2) # Right "ablehnbereich"
+
+# Add green horizontal line for the "Annahmebereich"
+segments(x0 = p25, y0 = 0, x1 = p975, y1 = 0, col = "green", lwd = 2)   # Annahmebereich
+
+# Add text labels for "ablehnbereich" at the edges (bold)
+text(x = min(x) + 1, y = 0.01, labels = "Ablehnbereich", col = "red", cex = 0.8, pos = 3, font = 2)
+text(x = max(x) - 1, y = 0.01, labels = "Ablehnbereich", col = "red", cex = 0.8, pos = 3, font = 2)
+
+# Add text label for "Annahmebereich" (bold)
+text(x = (p25 + p975) / 2, y = 0.01, labels = "Annahmebereich", col = "green", cex = 0.8, pos = 3, font = 2)
+
+# Annotate the kritische Werte and mean 
+text(c(p25, mean, p975), c(0.02, 0.02, 0.02), 
+     labels = c("kritischer Wert", "Mean", "kritischer Wert"), 
+     pos = 3, col = c("red", "black", "red"), cex = 0.8, font = 2)
